@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YChat</title>
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <link href="https://googleapis.com" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+    <div class="main-wrapper">
+        <div class="left-side">
+            <div class="brand">
+                <i class="fa-solid fa-comments brand-icon"></i>
+                <h1>YChat</h1>
+            </div>
+            <div class="intro-text">
+                <h2></h2>
+                <p></p>
+            </div>
+            <div class="features">
+                <div class="feature-item"><i class="fa-solid fa-bolt"></i> Ultra Hızlı</div>
+                <div class="feature-item"><i class="fa-solid fa-user-secret"></i> Anonim</div>
+                <div class="feature-item"><i class="fa-solid fa-wand-magic-sparkles"></i> Modern</div>
+            </div>
+        </div>
+
+        <div class="right-side">
+            <div class="form-container">
+                
+                <!-- GİRİŞ FORMU -->
+                <div id="login-form" class="form-box">
+                    <h2>Tekrar Hoş Geldin! 🚀</h2>
+                    <p class="subtitle">Devam etmek için kullanıcı bilgini gir.</p>
+                    <div class="input-group">
+                        <i class="fa-regular fa-user input-icon"></i>
+                        <input type="text" id="login-username" placeholder="Kullanıcı Adınız" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="login-password" placeholder="Şifreniz" required>
+                    </div>
+                    <button id="btn-login" class="btn-primary">Giriş Yap <i class="fa-solid fa-arrow-right"></i></button>
+                    <p class="toggle-text">Hesabın yok mu? <a href="#" id="to-register">Hemen Oluştur</a></p>
+                </div>
+
+                <!-- KAYIT FORMU -->
+                <div id="register-form" class="form-box hidden">
+                    <h2>Hesap Oluştur! 🎉</h2>
+                    <p class="subtitle">Sohbete katılmak için bir kullanıcı adı seç.</p>
+                    <div class="input-group">
+                        <i class="fa-regular fa-user input-icon"></i>
+                        <input type="text" id="reg-username" placeholder="Kullanıcı Adı Belirleyin" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="reg-password" placeholder="Şifre Belirleyin" required>
+                    </div>
+                    <button id="btn-register" class="btn-primary">Kayıt Ol <i class="fa-solid fa-user-plus"></i></button>
+                    <p class="toggle-text">Zaten üye misiniz? <a href="#" id="to-login">Giriş Yap</a></p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('to-register').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('register-form').classList.remove('hidden');
+        });
+
+        document.getElementById('to-login').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('register-form').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+        });
+
+        document.getElementById('btn-register').addEventListener('click', function() {
+            const u = document.getElementById('reg-username').value.trim();
+            const p = document.getElementById('reg-password').value;
+            if(!u || !p) { alert("Lütfen boş alan bırakmayın!"); return; }
+            if(p.length < 6) { alert("Şifre en az 6 karakter olmalıdır!"); return; }
+
+            fetch('/api/register', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: u, password: p})
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    localStorage.setItem('username', u);
+                    window.location.href = '/chat.html';
+                } else { alert(data.message); }
+            });
+        });
+
+        document.getElementById('btn-login').addEventListener('click', function() {
+            const u = document.getElementById('login-username').value.trim();
+            const p = document.getElementById('login-password').value;
+            if(!u || !p) { alert("Lütfen boş alan bırakmayın!"); return; }
+
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: u, password: p})
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    localStorage.setItem('username', u);
+                    window.location.href = '/chat.html';
+                } else { alert(data.message); }
+            });
+        });
+    </script>
+</body>
+</html>

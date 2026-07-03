@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YChat - Canlı Sohbet Odası</title>
+    <link rel="stylesheet" href="https://cloudflare.com">
+    <link rel="stylesheet" href="/style.css">
+    <style>
+        /* Tarih Çizgisi ve Tik İkonu Stilleri */
+        .date-divider { text-align: center; margin: 20px 0; position: relative; width: 100%; display: block; clear: both; }
+        .date-divider span { background: #111c44; color: #64748b; padding: 6px 16px; border-radius: 20px; font-size: 11px; font-weight: 600; border: 1px solid #1e293b; }
+        .status-tick { font-size: 11px; margin-left: 5px; font-weight: bold; }
+        .tick-unread { color: #64748b; } /* Gitti (Tek Tik) */
+        .tick-read { color: #3b82f6; } /* Okundu (Mavi Çift Tik) [10] */
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <!-- SOL PANEL -->
+        <div class="sidebar">
+            <div class="top-side" style="display: flex; flex-direction: column; height: 100%;">
+                <div class="user-profile">
+                    <h3>Hoş Geldin,</h3>
+                    <div id="current-username">...</div>
+                </div>
+                
+                <div class="general-room-btn active-chat" id="general-btn" onclick="selectGeneralChat()">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Genel Sohbet Odası</span>
+                </div>
+
+                <div class="online-section">
+                    <div>
+                        <h4><i class="fa-regular fa-comment-dots"></i> Mesajlaştıklarım</h4>
+                        <div class="list-container" id="dm-list"></div>
+                    </div>
+                    <div>
+                        <h4><i class="fa-solid fa-address-book"></i> Tüm Kullanıcılar</h4>
+                        <div class="list-container" id="all-users-list"></div>
+                    </div>
+                </div>
+            </div>
+            <button onclick="logout()" class="btn-logout" style="margin-top: 15px;">
+                <i class="fa-solid fa-right-from-bracket"></i> Çıkış Yap
+            </button>
+        </div>
+
+        <!-- SAĞ PANEL -->
+        <div class="chat-area">
+            <div class="chat-header-title" id="chat-header">
+                <i class="fa-solid fa-users" style="color: #6366f1;"></i> Genel Sohbet Odası
+            </div>
+            <div class="messages-box" id="messages-box"></div>
+            <div class="input-area">
+                <input type="text" id="message-input" placeholder="Mesajınızı buraya yazın..." autocomplete="off" onkeypress="checkEnter(event)">
+                <button onclick="sendMessage()" class="btn-send"><i class="fa-regular fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/chat.js"></script>
+</body>
+</html>
